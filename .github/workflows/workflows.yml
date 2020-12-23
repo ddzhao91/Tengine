@@ -22,7 +22,7 @@ jobs:
     - name: ls
       run: ls models
     - name: test
-      run: ./build/tests/tm_classification -n squeezenet
+      run: ./build/tests/tm_classify -n squeezenet
 
   linux-gcc-avx2:
     runs-on: ubuntu-latest
