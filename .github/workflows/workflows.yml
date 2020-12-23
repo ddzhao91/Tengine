@@ -19,6 +19,8 @@ jobs:
       run: pwd
     - name: ls
       run: ls
+    - name: model
+      run: git clone https://github.com/ddzhao91/model_zoo.git models
 
 
   linux-gcc-avx2:
