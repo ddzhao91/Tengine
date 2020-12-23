@@ -54,6 +54,12 @@ jobs:
       run: mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../toolchains/arm-linux-gnueabi.toolchain.cmake -DTENGINE_BUILD_TESTS=ON ..
     - name: build
       run: cmake --build build -j 2
+    - name: model
+      run: git clone https://github.com/ddzhao91/model_zoo.git models
+    - name: test
+      run: |
+        export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
+        TESTS_EXECUTABLE_LOADER=qemu-arm TESTS_EXECUTABLE_LOADER_ARGUMENTS="-L;/usr/arm-linux-gnueabi" ./build/tests/tm_classify -n squeezenet
 
   linux-gcc-avx2:
     runs-on: ubuntu-latest
