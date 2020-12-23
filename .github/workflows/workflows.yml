@@ -20,7 +20,7 @@ jobs:
     - name: test
       run: ./build/tests/tm_classify -n squeezenet
 
-linux-gcc-arm:
+  linux-gcc-arm:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -54,7 +54,6 @@ linux-gcc-arm:
       run: mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../toolchains/arm-linux-gnueabi.toolchain.cmake -DTENGINE_BUILD_TESTS=ON ..
     - name: build
       run: cmake --build build -j 2
-      
 
   linux-gcc-avx2:
     runs-on: ubuntu-latest
