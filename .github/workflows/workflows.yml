@@ -56,6 +56,10 @@ jobs:
       run: cmake --build build -j 2
     - name: model
       run: git clone https://github.com/ddzhao91/model_zoo.git models
+    - name: pwd
+      run: |
+        pwd
+        ls
     - name: test
       run: |
         export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
