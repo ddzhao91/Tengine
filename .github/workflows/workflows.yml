@@ -21,6 +21,8 @@ jobs:
       run: git clone https://github.com/ddzhao91/model_zoo.git models
     - name: ls
       run: ls models
+    - name: test
+      run: ./build/tests/tm_classification -n squeezenet
 
   linux-gcc-avx2:
     runs-on: ubuntu-latest
