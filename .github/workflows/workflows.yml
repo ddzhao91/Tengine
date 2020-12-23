@@ -15,14 +15,46 @@ jobs:
       run: mkdir build && cd build && cmake -DTENGINE_BUILD_TESTS=ON ..
     - name: build
       run: cmake --build build -j 2
-    - name: pwd
-      run: pwd
     - name: model
       run: git clone https://github.com/ddzhao91/model_zoo.git models
-    - name: ls
-      run: ls models
     - name: test
       run: ./build/tests/tm_classify -n squeezenet
+
+linux-gcc-arm:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: cache-qemu
+      id: cache-qemu
+      uses: actions/cache@v1
+      with:
+        path: qemu-install
+        key: qemu-arm-install-1
+    - name: checkout-qemu
+      if: steps.cache-qemu.outputs.cache-hit != 'true'
+      uses: actions/checkout@v2
+      with:
+        repository: qemu/qemu
+        path: qemu
+        ref: 8746309137ba470d1b2e8f5ce86ac228625db940
+    - name: qemu
+      if: steps.cache-qemu.outputs.cache-hit != 'true'
+      run: |
+        cd qemu
+        ./configure --prefix=install --target-list=arm-linux-user --disable-system
+        make -j2
+        make install
+        cp -r arm-linux-user/install $GITHUB_WORKSPACE/qemu-install
+    - name: arm-gnu-toolchain
+      run: |
+        sudo apt-get update
+        sudo apt-get install g++-arm-linux-gnueabi
+    - name: configure
+      run: mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../toolchains/arm-linux-gnueabi.toolchain.cmake -DTENGINE_BUILD_TESTS=ON ..
+    - name: build
+      run: cmake --build build -j 2
+      
 
   linux-gcc-avx2:
     runs-on: ubuntu-latest
