@@ -62,8 +62,9 @@ jobs:
         ls
     - name: test
       run: |
+        cd build/tests
         export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
-        TESTS_EXECUTABLE_LOADER=qemu-arm TESTS_EXECUTABLE_LOADER_ARGUMENTS="-L;/usr/arm-linux-gnueabi" ./build/tests/tm_classify -n squeezenet
+        TESTS_EXECUTABLE_LOADER=qemu-arm TESTS_EXECUTABLE_LOADER_ARGUMENTS="-L;/usr/arm-linux-gnueabi" /tm_classify -n squeezenet
 
   linux-gcc-avx2:
     runs-on: ubuntu-latest
