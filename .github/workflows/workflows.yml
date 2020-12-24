@@ -64,7 +64,7 @@ jobs:
       run: |
         cd benchmark
         export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
-        TESTS_EXECUTABLE_LOADER=qemu-arm TESTS_EXECUTABLE_LOADER_ARGUMENTS="-L;/usr/arm-linux-gnueabi" ../build/benchmark/tm_benchmark
+        qemu-arm -L /usr/arm-linux-gnueabi ../build/benchmark/tm_benchmark
 
   linux-gcc-avx2:
     runs-on: ubuntu-latest
