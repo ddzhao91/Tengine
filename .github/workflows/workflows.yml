@@ -59,7 +59,7 @@ jobs:
     - name: test
       run: |
         export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
-        qemu-arm -L /usr/arm-linux-gnueabi ./build/tests/tm_classify -n squeezenet 
+        ./tests/test_arm32.sh 
 
   linux-gcc-avx2:
     runs-on: ubuntu-latest
