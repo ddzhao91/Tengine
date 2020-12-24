@@ -15,8 +15,6 @@ jobs:
       run: mkdir build && cd build && cmake -DTENGINE_BUILD_TESTS=ON ..
     - name: build
       run: cmake --build build -j 2
-    - name: model
-      run: git clone https://github.com/ddzhao91/model_zoo.git models
     - name: test
       run: ./build/tests/tm_classify -n squeezenet
 
@@ -54,8 +52,6 @@ jobs:
       run: mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../toolchains/arm-linux-gnueabi.toolchain.cmake -DTENGINE_BUILD_TESTS=ON ..
     - name: build
       run: cmake --build build -j 2
-    - name: model
-      run: git clone https://github.com/ddzhao91/model_zoo.git models
     - name: test
       run: |
         export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
@@ -97,8 +93,6 @@ jobs:
     - name: build
       run: cmake --build build -j 2
 
-    - name: model
-      run: git clone https://github.com/ddzhao91/model_zoo.git models
     - name: test
       run: |
         export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
