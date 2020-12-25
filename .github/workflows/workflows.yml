@@ -15,6 +15,10 @@ jobs:
       run: mkdir build && cd build && cmake -DTENGINE_BUILD_TESTS=ON ..
     - name: build
       run: cmake --build build -j 2
+    - name: models
+      run: |
+        cd models
+        wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=19TckYikEkcdzAyz78x9gLvd3Q5r58o64' -O squeezenet.tmfile
     - name: test
       run: ./build/tests/tm_classify -n squeezenet
 
@@ -52,6 +56,10 @@ jobs:
       run: mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../toolchains/arm-linux-gnueabi.toolchain.cmake -DTENGINE_BUILD_TESTS=ON ..
     - name: build
       run: cmake --build build -j 2
+    - name: models
+      run: |
+        cd models
+        wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=19TckYikEkcdzAyz78x9gLvd3Q5r58o64' -O squeezenet.tmfile
     - name: test
       run: |
         export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
@@ -92,6 +100,10 @@ jobs:
       run: mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../toolchains/aarch64-linux-gnu.toolchain.cmake -DTENGINE_BUILD_TESTS=ON ..
     - name: build
       run: cmake --build build -j 2
+    - name: models
+      run: |
+        cd models
+        wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=19TckYikEkcdzAyz78x9gLvd3Q5r58o64' -O squeezenet.tmfile
 
     - name: test
       run: |
