@@ -17,8 +17,9 @@ jobs:
       run: cmake --build build -j 2
     - name: models
       run: |
-        cd models
-        wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=19TckYikEkcdzAyz78x9gLvd3Q5r58o64' -O squeezenet.tmfile
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5" -O models.zip && rm -rf /tmp/cookies.txt
+        unzip models.zip
+
     - name: test
       run: ./build/tests/tm_classify -n squeezenet
 
@@ -58,8 +59,9 @@ jobs:
       run: cmake --build build -j 2
     - name: models
       run: |
-        cd models
-        wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=19TckYikEkcdzAyz78x9gLvd3Q5r58o64' -O squeezenet.tmfile
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5" -O models.zip && rm -rf /tmp/cookies.txt
+        unzip models.zip
+
     - name: test
       run: |
         export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
@@ -102,8 +104,8 @@ jobs:
       run: cmake --build build -j 2
     - name: models
       run: |
-        cd models
-        wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=19TckYikEkcdzAyz78x9gLvd3Q5r58o64' -O squeezenet.tmfile
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5" -O models.zip && rm -rf /tmp/cookies.txt
+        unzip models.zip
 
     - name: test
       run: |
