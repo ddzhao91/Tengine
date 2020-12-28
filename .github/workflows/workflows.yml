@@ -24,10 +24,9 @@ jobs:
         mv x86_data data
         wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1qOge8XU0QJRpwJ49DBQv_igsSLALJpKt' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1qOge8XU0QJRpwJ49DBQv_igsSLALJpKt" -O images.zip && rm -rf /tmp/cookies.txt
         unzip images
-
-
     - name: test
-      run: ./build/tests/tm_classify -n squeezenet
+      run: ./tests/test_arm32.sh
+
 
   linux-gcc-arm:
     runs-on: ubuntu-20.04
@@ -72,7 +71,6 @@ jobs:
         mv arm32_data data
         wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1qOge8XU0QJRpwJ49DBQv_igsSLALJpKt' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1qOge8XU0QJRpwJ49DBQv_igsSLALJpKt" -O images.zip && rm -rf /tmp/cookies.txt
         unzip images.zip
-
     - name: test
       run: |
         export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
