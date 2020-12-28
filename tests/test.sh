@@ -4,7 +4,7 @@ export NumClusterLite=1
 
 function classify_cat()
 {
-    ./build/tests/tm_classfication -n $1
+    ./build/tests/tm_classify -n $1
     if [ "$?" != 0 ]; then
         echo "failed"
         return 0
@@ -16,7 +16,7 @@ function classify_cat()
 
 function classify_bike()
 {
-    ./build/tests/tm_classfication -n $1 -i ./images/bike.jpg
+    ./build/tests/tm_classify -n $1 -i ./images/bike.jpg
     if [ "$?" != 0 ]; then
         echo "failed"
         return 0
@@ -29,6 +29,10 @@ function classify_bike()
 
 classify_models=(squeezenet mobilenet mobilenet_v2 alexnet googlenet inception_v3 inception_v4 resnet50 vgg16 mnasnet shufflenet_1xg3 shufflenet_v2 resnet18_v2_mx )
 
+failed_models=()
+pass_model_count=0
+failed_model_count=0
+total_model_count=0
 for i in ${classify_models[@]}
 do
     if [ "$i" == "resnet50" ]; then
@@ -53,11 +57,12 @@ echo "pass model count:$pass_model_count "
 echo "failed model count:$failed_model_count "
 echo
 
-echo "failed model list:"
-for i in ${failed_models[@]}
-do
-    echo -n "$i " 
-done
 
 if [ "$failed_model_count" != 0 ]; then
+    echo "failed model list:"
+    for i in ${failed_models[@]}
+    do
+        echo -n "$i " 
+    done
 exit 1
+fi
