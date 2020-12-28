@@ -12,9 +12,118 @@ jobs:
     - name: protobuf
       run: sudo apt-get install libopencv-dev    
     - name: configure
-      run: mkdir build && cd build && cmake ..
+      run: mkdir build && cd build && cmake -DTENGINE_BUILD_TESTS=ON ..
     - name: build
       run: cmake --build build -j 2
+    - name: models
+      run: |
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5" -O models.zip && rm -rf /tmp/cookies.txt
+        unzip models.zip
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1fECHrETrp1yErwYnPRWwt9WXBfSkckFv' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1fECHrETrp1yErwYnPRWwt9WXBfSkckFv" -O x86_data.zip && rm -rf /tmp/cookies.txt
+        unzip x86_data.zip
+        mv x86_data data
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1qOge8XU0QJRpwJ49DBQv_igsSLALJpKt' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1qOge8XU0QJRpwJ49DBQv_igsSLALJpKt" -O images.zip && rm -rf /tmp/cookies.txt
+        unzip images
+    - name: test
+      run: ./tests/test.sh
+
+
+  linux-gcc-arm32:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: cache-qemu
+      id: cache-qemu
+      uses: actions/cache@v1
+      with:
+        path: qemu-install
+        key: qemu-arm-install-1
+    - name: checkout-qemu
+      if: steps.cache-qemu.outputs.cache-hit != 'true'
+      uses: actions/checkout@v2
+      with:
+        repository: qemu/qemu
+        path: qemu
+        ref: 8746309137ba470d1b2e8f5ce86ac228625db940
+    - name: qemu
+      if: steps.cache-qemu.outputs.cache-hit != 'true'
+      run: |
+        cd qemu
+        ./configure --prefix=install --target-list=arm-linux-user --disable-system
+        make -j2
+        make install
+        cp -r arm-linux-user/install $GITHUB_WORKSPACE/qemu-install
+    - name: arm-gnu-toolchain
+      run: |
+        sudo apt-get update
+        sudo apt-get install g++-arm-linux-gnueabi
+    - name: configure
+      run: mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../toolchains/arm-linux-gnueabi.toolchain.cmake -DTENGINE_BUILD_TESTS=ON ..
+    - name: build
+      run: cmake --build build -j 2
+    - name: models
+      run: |
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5" -O models.zip && rm -rf /tmp/cookies.txt
+        unzip models.zip
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1uAB2j9mHZBO-9K4Qa8HULiuGuXMcSZa-' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1uAB2j9mHZBO-9K4Qa8HULiuGuXMcSZa-" -O arm32_data.zip && rm -rf /tmp/cookies.txt
+        unzip arm32_data.zip
+        mv arm32_data data
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1qOge8XU0QJRpwJ49DBQv_igsSLALJpKt' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1qOge8XU0QJRpwJ49DBQv_igsSLALJpKt" -O images.zip && rm -rf /tmp/cookies.txt
+        unzip images.zip
+    - name: test
+      run: |
+        export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
+        ./tests/test_arm32.sh
+
+
+  linux-gcc-aarch64:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: cache-qemu
+      id: cache-qemu
+      uses: actions/cache@v1
+      with:
+        path: qemu-install
+        key: qemu-aarch64-install-1
+    - name: checkout-qemu
+      if: steps.cache-qemu.outputs.cache-hit != 'true'
+      uses: actions/checkout@v2
+      with:
+        repository: qemu/qemu
+        path: qemu
+        ref: 8746309137ba470d1b2e8f5ce86ac228625db940
+    - name: qemu
+      if: steps.cache-qemu.outputs.cache-hit != 'true'
+      run: |
+        cd qemu
+        ./configure --prefix=install --target-list=aarch64-linux-user --disable-system
+        make -j2
+        make install
+        cp -r aarch64-linux-user/install $GITHUB_WORKSPACE/qemu-install
+    - name: aarch64-gnu-toolchain
+      run: |
+        sudo apt-get update
+        sudo apt-get install g++-aarch64-linux-gnu
+    - name: configure
+      run: mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../toolchains/aarch64-linux-gnu.toolchain.cmake -DTENGINE_BUILD_TESTS=ON ..
+    - name: build
+      run: cmake --build build -j 2
+    - name: models
+      run: |
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1HOLaLy0ZTcFmxbVFxr116U1nIYwqhZg5" -O models.zip && rm -rf /tmp/cookies.txt
+        unzip models.zip
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1KwmK6qpzcOkC1uXbtlZzDhD6LedPCXqa' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1KwmK6qpzcOkC1uXbtlZzDhD6LedPCXqa" -O arm64_data.zip && rm -rf /tmp/cookies.txt
+        unzip arm64_data.zip
+        mv arm64_data data
+        wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1qOge8XU0QJRpwJ49DBQv_igsSLALJpKt' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1qOge8XU0QJRpwJ49DBQv_igsSLALJpKt" -O images.zip && rm -rf /tmp/cookies.txt
+        unzip images
+    - name: test
+      run: |
+        export PATH=$GITHUB_WORKSPACE/qemu-install/bin:$PATH
+        ./tests/test_arm64.sh
 
 
   linux-gcc-avx2:
